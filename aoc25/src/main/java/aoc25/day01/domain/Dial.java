@@ -1,7 +1,7 @@
 package aoc25.day01.domain;
 
 /**
- * A circular dial with values in range [0, size]. Rotations wrap within range.
+ * A circular dial with values in range [0, size). Rotations wrap within range.
  */
 public class Dial {
 
