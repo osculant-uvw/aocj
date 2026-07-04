@@ -10,7 +10,7 @@ import aoc25.day01.domain.*;
 
 public class Day01 {
 
-    static final String INPUT_PATH = "src/test/inputs/day01test.txt";
+    static final String INPUT_PATH = "inputs/day01.txt";
     static final int DIAL_START = 50;
     static final int DIAL_SIZE = 100;
 
@@ -22,11 +22,12 @@ public class Day01 {
             Dial dial = new Dial(DIAL_START, DIAL_SIZE);
             for (Instruction instr : instructions) {
                 dial.rotate(instr.direction, instr.number);
-                if (dial.getValue() == 0) {
+                if (dial.getPosition() == 0) {
                     zeroOccurences++;
                 }
             }
             System.out.printf("number of times the dial points to 0: %s  %n", zeroOccurences);
+            System.out.printf("number of times the dial crosses 0: %s  %n", dial.getZeroPasses());
 
         } catch (Exception e) {
             System.out.println(e.getMessage());

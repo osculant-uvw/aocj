@@ -1,7 +1,6 @@
 package aoc25.day01;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import aoc25.day01.domain.*;
@@ -30,12 +29,33 @@ public class DialTest {
         List<Integer> gather = new java.util.ArrayList<>();
         for (Day01.Instruction instr: instructions) {
             dial.rotate(instr.direction(), instr.number());
-            gather.add(dial.getValue());
+            gather.add(dial.getPosition());
         }
 
         List<Integer> expected = Arrays.asList(82, 52, 0, 95, 55, 0, 99, 0, 14, 32);
 
         assert gather.equals(expected);
+        assert dial.getZeroPasses() == 6;
+    }
+
+    @Test
+    void rotateRightAndLeftFromRightSkewedStart() {
+        Dial dial_1 = new Dial(75, Day01.DIAL_SIZE);
+        Dial dial_2 = new Dial(75, Day01.DIAL_SIZE);
+
+        dial_1.rotate(DialDirection.Right, 250);
+        dial_2.rotate(DialDirection.Left, 250);
+
+        // 250 mod 100 = half-turn
+        // half-turns left and right will meet at the same position
+        assert dial_1.getPosition() == 25;
+        assert dial_2.getPosition() == 25;
+
+        // start position is skewed towards the rhs
+        // 75 + 250 = 325, quotient 100 = 3
+        // 75 - 250 = 175, quotient 100 = -2, take abs
+        assert dial_1.getZeroPasses() == 3;
+        assert dial_2.getZeroPasses() == 2;
     }
 
 }

@@ -1,25 +1,30 @@
 package aoc25.day01.domain;
 
 /**
- * A circular dial with values in range [0, size). Rotations wrap within range.
+ * A circular dial with position in range [0, size). Rotations wrap within range.
  */
 public class Dial {
 
-    public final int SIZE;
-    private int value;
+    public final int size;
+
+    private int position;
+    private int zeroPasses = 0;
 
     public Dial(int start, int size){
-        value = Math.floorMod(start, size);
-        SIZE = size;
+        this.position = Math.floorMod(start, size);
+        this.size = size;
     }
 
-    public int getValue() {return value;}
+    public int getPosition() {return position;}
+    public int getZeroPasses() {return zeroPasses;}
 
-    public void rotate(DialDirection direction, int turns) {
-        switch (direction) {
-            case Right -> value = Math.floorMod(value + turns, SIZE);
-            case Left  -> value = Math.floorMod(value - turns, SIZE);
-        }
+    public void rotate(DialDirection direction, int amount) {
+        int rotation = switch (direction) {
+            case Right ->   amount;
+            case Left  -> - amount;
+        };
+        zeroPasses += Math.abs(Math.floorDiv(position + rotation, size));
+        position = Math.floorMod(position + rotation, size);
     }
 
 }
