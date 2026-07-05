@@ -4,8 +4,10 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
-import aoc25.day01.domain.DialDirection;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import aoc25.day01.domain.DialDirection;
 
 class Day01Test {
 
@@ -30,7 +32,7 @@ class Day01Test {
                 new Day01.Instruction(DialDirection.Left, 82)
         );
 
-        assert input.equals(expected);
+        assertEquals(expected, input);
     }
 
 }

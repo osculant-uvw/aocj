@@ -1,13 +1,13 @@
 package aoc25.day01;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import aoc25.day01.domain.*;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import aoc25.day01.domain.*;
 
 public class DialTest {
 
@@ -28,16 +28,21 @@ public class DialTest {
                 new Day01.Instruction(DialDirection.Left, 82)
         );
 
-        List<Integer> gather = new java.util.ArrayList<>();
+        List<Integer> positions = new ArrayList<>();
+        List<Integer> zeroPasses = new ArrayList<>();
         for (Day01.Instruction instr: instructions) {
             dial.rotate(instr.direction(), instr.number());
-            gather.add(dial.getPosition());
+            positions.add(dial.getPosition());
+            zeroPasses.add(dial.getZeroPasses());
         }
 
-        List<Integer> expected = Arrays.asList(82, 52, 0, 95, 55, 0, 99, 0, 14, 32);
+        List<Integer> expectedPositions = Arrays.asList(82, 52, 0, 95, 55, 0, 99, 0, 14, 32);
+        List<Integer> expectedZeroPasses = Arrays.asList(1, 1, 2, 2, 3, 4, 4, 5, 5, 6);
 
-        assert gather.equals(expected);
-        assert dial.getZeroPasses() == 6;
+        assertEquals(expectedPositions, positions);
+        assertEquals(expectedZeroPasses, zeroPasses);
+
+        assertEquals(6, dial.getZeroPasses());
     }
 
     @Test
@@ -50,14 +55,14 @@ public class DialTest {
 
         // 250 mod 100 = half-turn
         // half-turns left and right will meet at the same position
-        assert dial_1.getPosition() == 25;
-        assert dial_2.getPosition() == 25;
+        assertEquals(25, dial_1.getPosition());
+        assertEquals(25, dial_2.getPosition());
 
         // start position is skewed towards the rhs
         // 75 + 250 = 325, quotient 100 = 3
         // 75 - 250 = -175, quotient 100 = -2, take abs
-        assert dial_1.getZeroPasses() == 3;
-        assert dial_2.getZeroPasses() == 2;
+        assertEquals(3, dial_1.getZeroPasses());
+        assertEquals(2, dial_2.getZeroPasses());
     }
 
     @Test
