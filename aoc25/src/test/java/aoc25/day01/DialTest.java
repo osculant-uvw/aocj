@@ -6,6 +6,8 @@ import java.util.List;
 import aoc25.day01.domain.*;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class DialTest {
 
@@ -53,9 +55,35 @@ public class DialTest {
 
         // start position is skewed towards the rhs
         // 75 + 250 = 325, quotient 100 = 3
-        // 75 - 250 = 175, quotient 100 = -2, take abs
+        // 75 - 250 = -175, quotient 100 = -2, take abs
         assert dial_1.getZeroPasses() == 3;
         assert dial_2.getZeroPasses() == 2;
+    }
+
+    @Test
+    void rotateRightAndLeftOntoZero() {
+        Dial dial_1 = new Dial(75, Day01.DIAL_SIZE);
+        Dial dial_2 = new Dial(75, Day01.DIAL_SIZE);
+
+        // rotate onto zero
+        dial_1.rotate(DialDirection.Right, 25);
+        dial_2.rotate(DialDirection.Left, 75);
+
+        assertEquals(1, dial_1.getZeroPasses());
+        assertEquals(1, dial_2.getZeroPasses());
+    }
+
+    @Test
+    void rotateRightAndLeftFromZero() {
+        Dial dial_1 = new Dial(0, Day01.DIAL_SIZE);
+        Dial dial_2 = new Dial(0, Day01.DIAL_SIZE);
+
+        dial_1.rotate(DialDirection.Right, 50);
+        dial_2.rotate(DialDirection.Left, 50);
+
+        // rotations from zero do not recontribute to count
+        assertEquals(0, dial_1.getZeroPasses());
+        assertEquals(0, dial_2.getZeroPasses());
     }
 
 }
