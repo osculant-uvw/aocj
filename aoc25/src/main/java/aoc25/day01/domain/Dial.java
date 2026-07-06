@@ -19,12 +19,19 @@ public class Dial {
     public int getZeroPasses() {return zeroPasses;}
 
     public void rotate(DialDirection direction, int amount) {
-        int rotation = switch (direction) {
-            case Right ->   amount;
-            case Left  -> - amount;
+        int distanceToFirstZero = switch (direction) {
+            case Right -> size - position;
+            case Left -> (position == 0) ? size : position;
         };
-        zeroPasses += Math.abs(Math.floorDiv(position + rotation, size));
-        position = Math.floorMod(position + rotation, size);
+
+        if (distanceToFirstZero <= amount) {
+            zeroPasses += 1 + (amount - distanceToFirstZero) / size;
+        }
+
+        position = switch (direction) {
+            case Right -> Math.floorMod(position + amount, size);
+            case Left -> Math.floorMod(position - amount, size);
+        };
     }
 
 }
