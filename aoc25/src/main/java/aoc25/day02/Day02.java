@@ -4,25 +4,29 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import aoc25.day02.domain.ProductRange;
 
 public class Day02 {
 
     static final String INPUT_PATH = "inputs/day02.txt";
+    static final String TEST_PATH = "src/test/resources/day02.txt";
 
     public static void main(String[] args) {
         try {
             List<ProductRange> ranges = parse(Path.of(INPUT_PATH));
 
-            long sum = 0;
+            Set<Long> enclosedSquares = new HashSet<>();
             for (ProductRange range : ranges) {
-                sum += range.getEnclosedSquareStringIntegers()
-                        .stream()
-                        .mapToLong(Long::longValue)
-                        .sum();
+                enclosedSquares.addAll(range.getEnclosedSquareStringIntegers());
             }
+            long sum = enclosedSquares.stream()
+                    .mapToLong(Long::longValue)
+                    .sum();
+
             System.out.printf("the sum of the invalid id's is: %d", sum);
 
         } catch (Exception e) {

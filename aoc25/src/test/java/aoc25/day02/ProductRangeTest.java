@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,23 +28,23 @@ public class ProductRangeTest {
                 new ProductRange(2121212118, 2121212124)
         );
 
-        List<List<Long>> gather = new ArrayList<>();
+        List<Set<Long>> gather = new ArrayList<>();
         for (ProductRange range : ranges) {
             gather.add(range.getEnclosedSquareStringIntegers());
         }
 
-        List<List<Long>> expected = List.of(
-                List.of(11L, 22L),
-                List.of(99L),
-                List.of(1010L),
-                List.of(1188511885L),
-                List.of(222222L),
-                List.of(),
-                List.of(446446L),
-                List.of(38593859L),
-                List.of(),
-                List.of(),
-                List.of()
+        List<Set<Long>> expected = List.of(
+                Set.of(11L, 22L),
+                Set.of(99L),
+                Set.of(1010L),
+                Set.of(1188511885L),
+                Set.of(222222L),
+                Set.of(),
+                Set.of(446446L),
+                Set.of(38593859L),
+                Set.of(),
+                Set.of(),
+                Set.of()
         );
 
         assertEquals(expected, gather);

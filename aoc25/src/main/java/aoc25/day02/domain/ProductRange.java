@@ -1,15 +1,17 @@
 package aoc25.day02.domain;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Stores an immutable integer range. Supplies methods to find string patterns on elements within the range.
  */
 public record ProductRange(long start, long end) {
 
-    public List<Long> getEnclosedSquareStringIntegers() {
-        List<Long> list = new ArrayList<>();
+    public Set<Long> getEnclosedSquareStringIntegers() {
+        Set<Long> list = new HashSet<>();
 
         for (long i = start; i <= end; i++) {
             String s = Long.toString(i);
