@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import aoc25.day02.domain.ProductRange;
 
@@ -19,10 +20,10 @@ public class Day02 {
         try {
             List<ProductRange> ranges = parse(Path.of(INPUT_PATH));
 
-            Set<Long> enclosedSquares = new HashSet<>();
-            for (ProductRange range : ranges) {
-                enclosedSquares.addAll(range.getEnclosedSquareStringIntegers());
-            }
+            Set<Long> enclosedSquares = ranges.stream()
+                    .flatMap(range -> range.getEnclosedSquareStringIntegers().stream())
+                    .collect(Collectors.toCollection(HashSet::new));
+
             long sum = enclosedSquares.stream()
                     .mapToLong(Long::longValue)
                     .sum();
