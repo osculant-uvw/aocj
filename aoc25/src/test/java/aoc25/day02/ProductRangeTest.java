@@ -50,4 +50,18 @@ public class ProductRangeTest {
         assertEquals(expected, gather);
     }
 
+    @Test
+    public void getSquareSubRangesFromRangeSpanningMultiplePowersOf10() {
+        ProductRange spanningRange = new ProductRange(6666L, 112_000L);
+
+        List<ProductRange> squareRanges = spanningRange.getSquareSubRanges();
+
+        List<ProductRange> expected = Arrays.asList(
+                new ProductRange(6666L, 9999L),
+                new ProductRange(100_000L, 112_000L)
+        );
+
+        assertEquals(expected, squareRanges);
+    }
+
 }

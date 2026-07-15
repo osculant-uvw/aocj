@@ -11,24 +11,39 @@ import java.util.Set;
 public record ProductRange(long start, long end) {
 
     public Set<Long> getEnclosedSquareStringIntegers() {
-        Set<Long> list = new HashSet<>();
+        Set<Long> set = new HashSet<>();
 
-        for (long i = start; i <= end; i++) {
-            String s = Long.toString(i);
+        for (ProductRange range : getSquareSubRanges()) {
 
-            int size = s.length();
-            if (size % 2 == 0) {
-                String s1 = s.substring(0, (size / 2));
-                String s2 = s.substring(size / 2);
-
+            for (long i = range.start; i <= range.end; i++) {
+                String s = Long.toString(i);
+                String s1 = s.substring(0, (s.length() / 2));
+                String s2 = s.substring(s.length() / 2);
                 if (s1.equals(s2)) {
-                    list.add(i);
+                    set.add(i);
                 }
             }
 
         }
 
-        return list;
+        return set;
+    }
+
+    public List<ProductRange> getSquareSubRanges() {
+        List<ProductRange> ranges = new ArrayList<>();
+
+        int minPower = (int) Math.log10(start);
+        int maxPower = (int) Math.log10(end);
+
+        for (int p = minPower; p <= maxPower; p++) {
+            if (p % 2 != 0) {
+                long newStart = (long) Math.max(start, Math.pow(10, p));
+                long newEnd = (long) Math.min(end, Math.pow(10, p + 1) - 1);
+                ranges.add(new ProductRange(newStart, newEnd));
+            }
+        }
+
+        return ranges;
     }
 
 }
