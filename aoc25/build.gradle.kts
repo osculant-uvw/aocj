@@ -25,6 +25,13 @@ tasks.register<JavaExec>("day01") {
     mainClass.set("aoc25.day01.Day01")
 }
 
+tasks.register<JavaExec>("day02") {
+    group = "aoc25"
+    description = "Run Day 2"
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("aoc25.day02.Day02")
+}
+
 tasks.register<JavaExec>("day03") {
     group = "aoc25"
     description = "Run Day 3"
