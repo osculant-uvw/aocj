@@ -28,7 +28,17 @@ public class Day02 {
                     .mapToLong(Long::longValue)
                     .sum();
 
-            System.out.printf("the sum of the invalid id's is: %d", sum);
+            System.out.printf("part 1: the sum of the invalid id's is: %d %n", sum);
+
+            Set<Long> enclosedKIntegers = ranges.stream()
+                    .flatMap(range -> range.getEnclosedKStringIntegers().stream())
+                    .collect(Collectors.toCollection(HashSet::new));
+
+            long sum2 = enclosedKIntegers.stream()
+                    .mapToLong(Long::longValue)
+                    .sum();
+
+            System.out.printf("part 2: the sum of the invalid id's is: %d %n", sum2);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
