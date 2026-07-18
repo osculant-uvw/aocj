@@ -111,6 +111,17 @@ public class RepdigitTest {
     }
 
     @Test
+    public void getSubrangesForANegativeRange() {
+        OrderedPair range = new OrderedPair(-112_000L, -6666L);
+
+        // if the argument is less than zero, then the result of log10 is NaN
+        // when cast to an int NaN takes the value of 0, thus we expect an empty list
+        List<OrderedPair> expected = List.of();
+
+        assertEquals(expected, Repdigit.getCandidateSubranges(range, 2));
+    }
+
+    @Test
     public void splitStringInto5Parts() {
         String s = Long.toString(9_999_999_999L);
         String[] expected = {"99", "99", "99", "99", "99"};

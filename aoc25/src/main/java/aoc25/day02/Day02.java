@@ -31,11 +31,11 @@ public class Day02 {
 
             System.out.printf("part 1: the sum of the invalid id's is: %d %n", sum1);
 
-            Set<Long> blocks = ranges.stream()
+            Set<Long> blocks2 = ranges.stream()
                     .flatMap(range -> Repdigit.getAllRepBlocks(range).stream())
                     .collect(Collectors.toCollection(HashSet::new));
 
-            long sum2 = blocks.stream()
+            long sum2 = blocks2.stream()
                     .mapToLong(Long::longValue)
                     .sum();
 
