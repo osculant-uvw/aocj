@@ -15,11 +15,11 @@ import aoc25.day02.domain.Repdigit;
 public class Day02 {
 
     static final String INPUT_PATH = "inputs/day02.txt";
-    static final String TEST_PATH = "src/test/resources/day02.txt";
+    static final String TEST_PATH = "src/test/inputs/day02test.txt";
 
     public static void main(String[] args) {
         try {
-            List<OrderedPair> ranges = parse(Path.of(INPUT_PATH));
+            List<OrderedPair> ranges = parse(Path.of(TEST_PATH));
 
             Set<Long> blocks1 = ranges.stream()
                     .flatMap(range -> Repdigit.getSquareRepBlocks(range).stream())
@@ -57,7 +57,7 @@ public class Day02 {
             final String[] parts = item.split("-");
             if (parts.length != 2) {
                 throw new IllegalArgumentException(
-                        String.format("item [%d] does not contain '-': %s", count, item)
+                        String.format("item [%d] does not contain a single '-': %s", count, item)
                 );
             }
 

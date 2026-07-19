@@ -1,9 +1,9 @@
 package aoc25.day02.domain;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 /**
  * Static class with methods for working with repeated blocks of digits within Longs.
@@ -21,12 +21,10 @@ public class Repdigit {
 
         for (OrderedPair subrange : getCandidateSubranges(range, 2)) {
 
-            for (long i = range.start(); i <= range.end(); i++) {
-                String s = Long.toString(i);
-                String s1 = s.substring(0, (s.length() / 2));
-                String s2 = s.substring(s.length() / 2);
-                if (s1.equals(s2)) {
-                    blocks.add(i);
+            for (long e = subrange.start(); e <= subrange.end(); e++) {
+                String[] strings = divideString(Long.toString(e), 2);
+                if (strings[0].equals(strings[1])) {
+                    blocks.add(e);
                 }
             }
 
@@ -42,8 +40,8 @@ public class Repdigit {
 
             for (OrderedPair subrange : getCandidateSubranges(range, p)) {
 
-                for (long i = subrange.start(); i <= subrange.end(); i++) {
-                    String[] strings = divideString(Long.toString(i), p);
+                for (long e = subrange.start(); e <= subrange.end(); e++) {
+                    String[] strings = divideString(Long.toString(e), p);
 
                     boolean match = true;
                     String s0 = strings[0];
@@ -54,7 +52,7 @@ public class Repdigit {
                     }
 
                     if (match) {
-                        blocks.add(i);
+                        blocks.add(e);
                     }
                 }
 

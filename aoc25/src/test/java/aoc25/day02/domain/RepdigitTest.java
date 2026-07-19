@@ -60,14 +60,14 @@ public class RepdigitTest {
                 Set.of(11L, 22L),
                 Set.of(99L, 111L),
                 Set.of(999L, 1010L),
-                Set.of(1188511885L),
-                Set.of(222222L),
+                Set.of(1_188_511_885L),
+                Set.of(222_222L),
                 Set.of(),
-                Set.of(446446L),
-                Set.of(38593859L),
-                Set.of(565656L),
-                Set.of(824824824L),
-                Set.of(2121212121L)
+                Set.of(446_446L),
+                Set.of(38_593_859L),
+                Set.of(565_656L),
+                Set.of(824_824_824L),
+                Set.of(2_121_212_121L)
         );
 
         assertEquals(expected, gather);
@@ -119,6 +119,13 @@ public class RepdigitTest {
         List<OrderedPair> expected = List.of();
 
         assertEquals(expected, Repdigit.getCandidateSubranges(range, 2));
+    }
+
+    @Test
+    public void splitStringInto2Parts() {
+        String s = Long.toString(121_121L);
+        String[] expected = {"121", "121"};
+        assertArrayEquals(expected, Repdigit.divideString(s, 2));
     }
 
     @Test
