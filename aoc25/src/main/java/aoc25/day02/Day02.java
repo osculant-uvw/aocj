@@ -9,26 +9,37 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import aoc25.day02.domain.ProductRange;
+import aoc25.day02.domain.OrderedPair;
+import aoc25.day02.domain.Repdigit;
 
 public class Day02 {
 
     static final String INPUT_PATH = "inputs/day02.txt";
-    static final String TEST_PATH = "src/test/resources/day02.txt";
+    static final String TEST_PATH = "src/test/inputs/day02test.txt";
 
     public static void main(String[] args) {
         try {
-            List<ProductRange> ranges = parse(Path.of(INPUT_PATH));
+            List<OrderedPair> ranges = parse(Path.of(INPUT_PATH));
 
-            Set<Long> enclosedSquares = ranges.stream()
-                    .flatMap(range -> range.getEnclosedSquareStringIntegers().stream())
+            Set<Long> blocks1 = ranges.stream()
+                    .flatMap(range -> Repdigit.getSquareRepBlocks(range).stream())
                     .collect(Collectors.toCollection(HashSet::new));
 
-            long sum = enclosedSquares.stream()
+            long sum1 = blocks1.stream()
                     .mapToLong(Long::longValue)
                     .sum();
 
-            System.out.printf("the sum of the invalid id's is: %d", sum);
+            System.out.printf("part 1: the sum of the invalid id's is: %d %n", sum1);
+
+            Set<Long> blocks2 = ranges.stream()
+                    .flatMap(range -> Repdigit.getAllRepBlocks(range).stream())
+                    .collect(Collectors.toCollection(HashSet::new));
+
+            long sum2 = blocks2.stream()
+                    .mapToLong(Long::longValue)
+                    .sum();
+
+            System.out.printf("part 2: the sum of the invalid id's is: %d %n", sum2);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -36,8 +47,8 @@ public class Day02 {
         }
     }
 
-    static List<ProductRange> parse(Path path) throws IOException, IllegalArgumentException {
-        List<ProductRange> ranges = new ArrayList<>();
+    static List<OrderedPair> parse(Path path) throws IOException, IllegalArgumentException {
+        List<OrderedPair> ranges = new ArrayList<>();
 
         final List<String> items = List.of(Files.readString(path).trim().split(","));
         int count = 0;
@@ -46,7 +57,7 @@ public class Day02 {
             final String[] parts = item.split("-");
             if (parts.length != 2) {
                 throw new IllegalArgumentException(
-                        String.format("item [%d] does not contain '-': %s", count, item)
+                        String.format("item [%d] does not contain a single '-': %s", count, item)
                 );
             }
 
@@ -58,7 +69,7 @@ public class Day02 {
                 );
             }
 
-            ranges.add(new ProductRange(Long.parseLong(s1), Long.parseLong(s2)));
+            ranges.add(new OrderedPair(Long.parseLong(s1), Long.parseLong(s2)));
             count++;
         }
 
