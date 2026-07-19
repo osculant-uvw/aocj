@@ -19,7 +19,7 @@ public class Day02 {
 
     public static void main(String[] args) {
         try {
-            List<OrderedPair> ranges = parse(Path.of(TEST_PATH));
+            List<OrderedPair> ranges = parse(Path.of(INPUT_PATH));
 
             Set<Long> blocks1 = ranges.stream()
                     .flatMap(range -> Repdigit.getSquareRepBlocks(range).stream())

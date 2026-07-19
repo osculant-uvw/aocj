@@ -1,9 +1,9 @@
 package aoc25.day02.domain;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.LongStream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Static class with methods for working with repeated blocks of digits within Longs.
@@ -16,6 +16,11 @@ public class Repdigit {
             2, 3, 5, 7, 11, 13, 17, 19
     };
 
+    /**
+     * @param range positive ordered pair.
+     * @return a set containing all elements in the range [a, b],
+     * who form Longs that have square repeated blocks of digits e.g. 121,121 is 121 repeated twice.
+     */
     public static Set<Long> getSquareRepBlocks(OrderedPair range) {
         Set<Long> blocks = new HashSet<>();
 
@@ -33,6 +38,11 @@ public class Repdigit {
         return blocks;
     }
 
+    /**
+     * @param range positive ordered pair.
+     * @return a set containing all elements in the range [a, b],
+     * who form Longs that have some sequence of digits repeated at least twice e.g. 121,212 is 12 repeated three times.
+     */
     public static Set<Long> getAllRepBlocks(OrderedPair range) {
         Set<Long> blocks = new HashSet<>();
 
