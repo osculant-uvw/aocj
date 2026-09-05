@@ -7,12 +7,14 @@ import java.util.BitSet;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import aoc25.day04.domain.CellGrid;
+
 public class Day04Test {
 
     @Test
     void parseTheExampleInput() throws Exception {
         Path path = Path.of(Day04.TEST_PATH);
-        Day04.NeighbourGrid input = Day04.parse(path);
+        CellGrid input = Day04.parse(path);
 
         // BitSet cannot be conveniently constructed from String
         BitSet bitsFirst = new BitSet();
@@ -31,8 +33,8 @@ public class Day04Test {
         bitsLast.set(6);
         bitsLast.set(8); // 1010111010
 
-        assertEquals(bitsFirst, input.grid().getFirst());
-        assertEquals(bitsLast, input.grid().getLast());
+        assertEquals(bitsFirst, input.getFirst());
+        assertEquals(bitsLast, input.getLast());
     }
 
     @Test
@@ -40,7 +42,7 @@ public class Day04Test {
         // unfortunately this relies on parse, due to the manual construction of BitSets
         // TODO: consider adding helper function
         Path path = Path.of(Day04.TEST_PATH);
-        Day04.NeighbourGrid input = Day04.parse(path);
+        CellGrid input = Day04.parse(path);
 
         int expected = 13;
         int returned = Day04.numberOfAccessibleItems(input);
