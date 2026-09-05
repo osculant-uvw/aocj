@@ -1,5 +1,7 @@
 package aoc25.day04;
 
+import aoc25.day04.domain.NeighbourGrid;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,7 +17,7 @@ public class Day04 {
 
     public static void main(String[] args) {
         try {
-            final List<BitSet> grid = parse(Path.of(INPUT_PATH));
+            final NeighbourGrid grid = parse(Path.of(INPUT_PATH));
 
             int accessible = numberOfAccessibleItems(grid);
             System.out.printf("number of accessible items: %s", accessible);
@@ -26,7 +28,7 @@ public class Day04 {
         }
     }
 
-    static List<BitSet> parse(Path path) throws IOException {
+    static NeighbourGrid parse(Path path) throws IOException {
         List<BitSet> grid = new ArrayList<>();
 
         final List<String> input = Files.readAllLines(path);
@@ -52,22 +54,21 @@ public class Day04 {
             count++;
         }
 
-        return grid;
+        return new NeighbourGrid(grid, width);
     }
 
-    static int numberOfAccessibleItems(List<BitSet> grid) {
+    static int numberOfAccessibleItems(NeighbourGrid grid) {
         int accessible = 0;
 
-        final int width = grid.getFirst().length();
-        BitSet empty = new BitSet(width);
+        BitSet empty = new BitSet(grid.width());
 
-        for (int i = 0; i < grid.size(); i++) {
+        for (int i = 0; i < grid.grid().size(); i++) {
 
-            BitSet top = i > 0 ? grid.get(i - 1) : empty;
-            BitSet current = grid.get(i);
-            BitSet bottom = i + 1 < grid.size() ? grid.get(i + 1) : empty;
+            BitSet top = i > 0 ? grid.grid().get(i - 1) : empty;
+            BitSet current = grid.grid().get(i);
+            BitSet bottom = i + 1 < grid.grid().size() ? grid.grid().get(i + 1) : empty;
 
-            for (int j = 0; j <= width; j++) {
+            for (int j = 0; j < grid.width(); j++) {
                 if (!current.get(j)) {
                     continue;
                 }
@@ -104,5 +105,7 @@ public class Day04 {
     private static int boolToInt(boolean value) {
         return value ? 1 : 0;
     }
+
+    public record NeighbourGrid(List<BitSet> grid, int width) {}
 
 }
