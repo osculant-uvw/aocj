@@ -7,18 +7,31 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
+import aoc25.day04.domain.CellGrid;
 
 public class Day04 {
 
     static final String INPUT_PATH = "inputs/day04.txt";
     static final String TEST_PATH = "src/test/inputs/day04test.txt";
 
+    static final int ACCESSIBLE_CELL_MAX_NEIGHBOURS = 4;
+
     public static void main(String[] args) {
         try {
-            final List<BitSet> grid = parse(Path.of(INPUT_PATH));
+            final CellGrid grid = parse(Path.of(INPUT_PATH));
 
-            int accessible = numberOfAccessibleItems(grid);
-            System.out.printf("number of accessible items: %s", accessible);
+            List<Integer> removed = new ArrayList<>();
+
+            int count;
+            do {
+                count = grid.update();
+                removed.add(count);
+            } while (count > 0);
+
+            int total = removed.stream().mapToInt(Integer::intValue).sum();
+
+            System.out.printf("first number of items removed: %d %n", removed.getFirst());
+            System.out.printf("total number of items removed: %d %n", total);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -26,83 +39,33 @@ public class Day04 {
         }
     }
 
-    static List<BitSet> parse(Path path) throws IOException {
-        List<BitSet> grid = new ArrayList<>();
-
+    static CellGrid parse(Path path) throws IOException {
         final List<String> input = Files.readAllLines(path);
-        final int width = input.getFirst().length();
+        CellGrid grid = new CellGrid(input.getFirst().length(), ACCESSIBLE_CELL_MAX_NEIGHBOURS);
 
-        int count = 0;
-        for (String line : input) {
+        for (int row = 0; row < input.size(); row++) {
+            String line = input.get(row);
+            grid.addRow();
 
-            if (line.length() != width) {
+            if (line.length() != grid.width) {
                 throw new IllegalArgumentException(
-                        String.format("line [%d] has length %d which does not match the rest of the grid", count, width)
+                        String.format(
+                                "line [%d] has length %d which does not match the rest of the grid",
+                                row,
+                                grid.width
+                        )
                 );
             }
 
-            BitSet bits = new BitSet(width);
-            for (int i = 0; i < width; i++) {
-                if (line.charAt(i) == '@') {
-                    bits.set(i);
+            for (int column = 0; column < grid.width; column++) {
+                if (line.charAt(column) == '@') {
+                    grid.setCell(row, column);
                 }
             }
 
-            grid.add(bits);
-            count++;
         }
 
         return grid;
-    }
-
-    static int numberOfAccessibleItems(List<BitSet> grid) {
-        int accessible = 0;
-
-        final int width = grid.getFirst().length();
-        BitSet empty = new BitSet(width);
-
-        for (int i = 0; i < grid.size(); i++) {
-
-            BitSet top = i > 0 ? grid.get(i - 1) : empty;
-            BitSet current = grid.get(i);
-            BitSet bottom = i + 1 < grid.size() ? grid.get(i + 1) : empty;
-
-            for (int j = 0; j <= width; j++) {
-                if (!current.get(j)) {
-                    continue;
-                }
-
-                boolean topLeft = j > 0 && top.get(j - 1);
-                boolean topMiddle = top.get(j);
-                boolean topRight = top.get(j + 1);
-
-                boolean left = j > 0 && current.get(j - 1);
-                boolean right = current.get(j + 1);
-
-                boolean bottomLeft = j > 0 && bottom.get(j - 1);
-                boolean bottomMiddle = bottom.get(j);
-                boolean bottomRight = bottom.get(j + 1);
-
-                int adjacent = boolToInt(topLeft)
-                        + boolToInt(topMiddle)
-                        + boolToInt(topRight)
-                        + boolToInt(left)
-                        + boolToInt(right)
-                        + boolToInt(bottomLeft)
-                        + boolToInt(bottomMiddle)
-                        + boolToInt(bottomRight);
-
-                if (adjacent < 4) {
-                    accessible++;
-                }
-            }
-        }
-
-        return accessible;
-    }
-
-    private static int boolToInt(boolean value) {
-        return value ? 1 : 0;
     }
 
 }
