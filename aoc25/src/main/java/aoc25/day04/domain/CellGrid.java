@@ -1,11 +1,10 @@
 package aoc25.day04.domain;
 
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
-public class CellGrid extends AbstractList<BitSet> {
+public class CellGrid {
     private final List<BitSet> rows = new ArrayList<>();
 
     public final int width;
@@ -16,22 +15,32 @@ public class CellGrid extends AbstractList<BitSet> {
         this.accessibleCellMaxNeighbours = accessibleCellMaxNeighbours;
     }
 
-    @Override
-    public BitSet get(int index) {
-        return rows.get(index);
+    public void addRow() {
+        rows.add(new BitSet());
     }
 
-    @Override
-    public int size() {
+    public int height() {
         return rows.size();
     }
 
-    @Override
-    public boolean add(BitSet bits) {
-        if (bits.length() > width) {
-            throw new IllegalArgumentException("Row exceeds grid width");
+    public void setCell(int row, int column) {
+        checkBounds(row, column);
+        rows.get(row).set(column);
+    }
+
+    public boolean getCell(int row, int column) {
+        checkBounds(row, column);
+        return rows.get(row).get(column);
+    }
+
+    private void checkBounds(int row, int column) {
+        if (row < 0 || row >= rows.size()) {
+            throw new IndexOutOfBoundsException("row: " + row);
         }
-        return rows.add(bits);
+
+        if (column < 0 || column >= width) {
+            throw new IndexOutOfBoundsException("column: " + column);
+        }
     }
 
     /**
@@ -73,7 +82,7 @@ public class CellGrid extends AbstractList<BitSet> {
                 boolean bottomMiddle = bottom.get(j);
                 boolean bottomRight = bottom.get(j + 1);
 
-                int adjacent = boolToInt(topLeft)
+                int neighbours = boolToInt(topLeft)
                         + boolToInt(topMiddle)
                         + boolToInt(topRight)
                         + boolToInt(left)
@@ -82,7 +91,7 @@ public class CellGrid extends AbstractList<BitSet> {
                         + boolToInt(bottomMiddle)
                         + boolToInt(bottomRight);
 
-                if (adjacent < accessibleCellMaxNeighbours) {
+                if (neighbours < accessibleCellMaxNeighbours) {
                     accessibleCells.add(new Cell(i, j));
                 }
             }
@@ -96,4 +105,3 @@ public class CellGrid extends AbstractList<BitSet> {
     private record Cell(int x, int y) {};
 
 }
-

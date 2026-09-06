@@ -43,28 +43,26 @@ public class Day04 {
         final List<String> input = Files.readAllLines(path);
         CellGrid grid = new CellGrid(input.getFirst().length(), ACCESSIBLE_CELL_MAX_NEIGHBOURS);
 
-        int count = 0;
-        for (String line : input) {
+        for (int row = 0; row < input.size(); row++) {
+            String line = input.get(row);
+            grid.addRow();
 
             if (line.length() != grid.width) {
                 throw new IllegalArgumentException(
                         String.format(
                                 "line [%d] has length %d which does not match the rest of the grid",
-                                count,
+                                row,
                                 grid.width
                         )
                 );
             }
 
-            BitSet bits = new BitSet(grid.width);
-            for (int i = 0; i < grid.width; i++) {
-                if (line.charAt(i) == '@') {
-                    bits.set(i);
+            for (int column = 0; column < grid.width; column++) {
+                if (line.charAt(column) == '@') {
+                    grid.setCell(row, column);
                 }
             }
 
-            grid.add(bits);
-            count++;
         }
 
         return grid;
