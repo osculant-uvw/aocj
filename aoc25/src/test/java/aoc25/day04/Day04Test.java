@@ -37,17 +37,4 @@ public class Day04Test {
         assertEquals(bitsLast, input.getLast());
     }
 
-    @Test
-    public void getAccessibleItemsForExampleInput() throws IOException {
-        // unfortunately this relies on parse, due to the manual construction of BitSets
-        // TODO: consider adding helper function
-        Path path = Path.of(Day04.TEST_PATH);
-        CellGrid input = Day04.parse(path);
-
-        int expected = 13;
-        int returned = Day04.numberOfAccessibleItems(input);
-
-        assertEquals(expected, returned);
-    }
-
 }

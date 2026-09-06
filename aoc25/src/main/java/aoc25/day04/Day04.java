@@ -3,6 +3,7 @@ package aoc25.day04;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
@@ -19,8 +20,18 @@ public class Day04 {
         try {
             final CellGrid grid = parse(Path.of(INPUT_PATH));
 
-            int accessible = numberOfAccessibleItems(grid);
-            System.out.printf("number of accessible items: %s", accessible);
+            List<Integer> removed = new ArrayList<>();
+
+            int count;
+            do {
+                count = grid.update();
+                removed.add(count);
+            } while (count > 0);
+
+            int total = removed.stream().mapToInt(Integer::intValue).sum();
+
+            System.out.printf("first number of items removed: %d %n", removed.getFirst());
+            System.out.printf("total number of items removed: %d %n", total);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -57,10 +68,6 @@ public class Day04 {
         }
 
         return grid;
-    }
-
-    static int numberOfAccessibleItems(CellGrid grid) {
-        return grid.update();
     }
 
 }

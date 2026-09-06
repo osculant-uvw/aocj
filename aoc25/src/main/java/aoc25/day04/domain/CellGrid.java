@@ -34,12 +34,6 @@ public class CellGrid extends AbstractList<BitSet> {
         return rows.add(bits);
     }
 
-    public int cellsOccupied() {
-        return rows.stream()
-                .mapToInt(BitSet::cardinality)
-                .sum();
-    }
-
     /**
      * Atomically updates the grid removing cells that are accessible based on their neighbour count
      * in the current global state.
