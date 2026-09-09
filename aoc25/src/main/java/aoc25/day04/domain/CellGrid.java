@@ -5,42 +5,56 @@ import java.util.BitSet;
 import java.util.List;
 
 public class CellGrid {
-    private final List<BitSet> rows = new ArrayList<>();
+    private final List<BitSet> grid;
+    private final int width;
 
-    public final int width;
-    public final int accessibleCellMaxNeighbours;
-
-    public CellGrid(int width, int accessibleCellMaxNeighbours) {
+    private CellGrid(List<BitSet> grid, int width) {
+        this.grid = grid;
         this.width = width;
-        this.accessibleCellMaxNeighbours = accessibleCellMaxNeighbours;
     }
 
-    public void addRow() {
-        rows.add(new BitSet());
-    }
+    public static CellGrid fromRows(List<String> rows) {
+        List<BitSet> grid = new ArrayList<>();
+        int width = 0;
 
-    public int height() {
-        return rows.size();
-    }
+        for (String row : rows) {
+            width = Math.max(row.length(), width);
 
-    public void setCell(int row, int column) {
-        checkBounds(row, column);
-        rows.get(row).set(column);
-    }
+            BitSet bits = new BitSet();
+            for (int i = 0; i < row.length(); i++) {
+                if (row.charAt(i) == '@') {
+                    bits.set(i);
+                } else if (row.charAt(i) != '.') {
+                    throw new IllegalArgumentException(
+                            String.format("unsupported cell representation %c at position %d", row.charAt(i), i)
+                    );
+                }
+            }
+            grid.add(bits);
 
-    public boolean getCell(int row, int column) {
-        checkBounds(row, column);
-        return rows.get(row).get(column);
-    }
-
-    private void checkBounds(int row, int column) {
-        if (row < 0 || row >= rows.size()) {
-            throw new IndexOutOfBoundsException("row: " + row);
         }
 
-        if (column < 0 || column >= width) {
-            throw new IndexOutOfBoundsException("column: " + column);
+        return new CellGrid(grid, width);
+    }
+
+    public List<String> toRows() {
+        List<String> rows = new ArrayList<>();
+
+        for (BitSet bits : grid) {
+            StringBuilder row = new StringBuilder();
+
+            for (int i = 0; i < width; i++) {
+                if (bits.get(i)) {
+                   row.append('@');
+                } else {
+                    row.append('.');
+                }
+            }
+
+            rows.add(row.toString());
         }
+
+        return rows;
     }
 
     /**
@@ -48,23 +62,23 @@ public class CellGrid {
      * in the current global state.
      * @return the number of cells removed.
      */
-    public int update() {
+    public int update(int maxNeighbours) {
         int removed = 0;
-        for (Cell pair : locateAccessibleCells()) {
-            rows.get(pair.x).clear(pair.y);
+        for (Cell pair : getRemovableCells(maxNeighbours)) {
+            grid.get(pair.x).clear(pair.y);
             removed++;
         }
 
         return removed;
     }
 
-    private List<Cell> locateAccessibleCells() {
+    private List<Cell> getRemovableCells(int maxNeighbours) {
         List<Cell> accessibleCells = new ArrayList<>();
 
-        for (int i = 0; i < rows.size(); i++) {
-            BitSet top = i > 0 ? rows.get(i - 1) : new BitSet();
-            BitSet current = rows.get(i);
-            BitSet bottom = i + 1 < rows.size() ? rows.get(i + 1) : new BitSet();
+        for (int i = 0; i < grid.size(); i++) {
+            BitSet top = i > 0 ? grid.get(i - 1) : new BitSet();
+            BitSet current = grid.get(i);
+            BitSet bottom = i + 1 < grid.size() ? grid.get(i + 1) : new BitSet();
 
             for (int j = 0; j < width; j++) {
                 if (!current.get(j)) {
@@ -91,7 +105,7 @@ public class CellGrid {
                         + boolToInt(bottomMiddle)
                         + boolToInt(bottomRight);
 
-                if (neighbours < accessibleCellMaxNeighbours) {
+                if (neighbours < maxNeighbours) {
                     accessibleCells.add(new Cell(i, j));
                 }
             }
