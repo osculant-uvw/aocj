@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import aoc25.day02.domain.OrderedPair;
+import aoc25.common.OrderedPair;
 import aoc25.day02.domain.Repdigit;
 
 public class Day02 {
