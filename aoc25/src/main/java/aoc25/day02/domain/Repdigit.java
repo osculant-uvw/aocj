@@ -1,5 +1,7 @@
 package aoc25.day02.domain;
 
+import aoc25.common.OrderedPair;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
