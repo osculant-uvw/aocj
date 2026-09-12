@@ -1,4 +1,4 @@
-package aoc25.day02.domain;
+package aoc25.common;
 
 public record OrderedPair(long start, long end)  {
 

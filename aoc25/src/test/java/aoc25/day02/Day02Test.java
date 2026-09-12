@@ -8,7 +8,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import aoc25.day02.domain.OrderedPair;
+import aoc25.common.OrderedPair;
 
 public class Day02Test {
 
