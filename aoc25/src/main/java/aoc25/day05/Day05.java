@@ -1,14 +1,15 @@
 package aoc25.day05;
 
+import aoc25.common.OrderedPair;
+import aoc25.day05.domain.InventoryManager;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import aoc25.common.OrderedPair;
 
 public class Day05 {
 
@@ -16,21 +17,15 @@ public class Day05 {
 
     public static void main(String[] args) {
         try {
-            InputState state = parse(Path.of(INPUT_PATH));
+            Inventory state = parse(Path.of(INPUT_PATH));
+            InventoryManager manager = new InventoryManager(state.ids(), state.idRanges());
 
-            Set<Long> collect = new HashSet<>();
-            for (long value : state.values) {
+            long size = manager.idRanges().stream()
+                    .mapToLong(a -> a.end() - a.start() + 1)
+                    .sum();
 
-                for (OrderedPair range : state.ranges) {
-                    if (range.start() <= value && value <= range.end()) {
-                        collect.add(value);
-                    }
-                }
-
-            }
-
-            collect.forEach(System.out::println);
-            System.out.printf("the number of valid id's is: %d %n", collect.size());
+            System.out.printf("the number of valid id's from values is: %d %n", manager.idsInRanges().size());
+            System.out.printf("the number of valid id's from ranges is: %d %n", size);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -38,9 +33,9 @@ public class Day05 {
         }
     }
 
-    static InputState parse(Path path) throws IOException {
-        List<OrderedPair> ranges = new ArrayList<>();
-        List<Long> values = new ArrayList<>();
+    static Inventory parse(Path path) throws IOException {
+        Set<Long> ids = new HashSet<>();
+        Set<OrderedPair> idRanges = new HashSet<>();
 
         int count = 0;
         List<String> lines = Files.readAllLines(path);
@@ -61,7 +56,7 @@ public class Day05 {
                 );
             }
 
-            ranges.add(new OrderedPair(Long.parseLong(s1), Long.parseLong(s2)));
+            idRanges.add(new OrderedPair(Long.parseLong(s1), Long.parseLong(s2)));
             count++;
         }
 
@@ -75,17 +70,15 @@ public class Day05 {
             }
 
             if (!line.chars().allMatch(Character::isDigit)) {
-                throw new IllegalArgumentException(
-                        String.format("line [%d] is not a digit %s", count, line)
-                );
+                throw new IllegalArgumentException(String.format("line [%d] is not a digit %s", count, line));
             }
 
-            values.add(Long.parseLong(line));
+            ids.add(Long.parseLong(line));
         }
 
-        return new InputState(ranges, values);
+        return new Inventory(ids, idRanges);
     }
 
-    record InputState(List<OrderedPair> ranges, List<Long> values) {}
+    record Inventory(Set<Long> ids, Set<OrderedPair> idRanges) {}
 
 }
