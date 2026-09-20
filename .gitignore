@@ -1,3 +1,7 @@
 .idea/
 .gradle
 build
+temp
+
+# ignore user inputs
+aoc25/inputs/*.txt
