@@ -53,6 +53,13 @@ tasks.register<JavaExec>("day05") {
     mainClass.set("aoc25.day05.Day05")
 }
 
+tasks.register<JavaExec>("day06") {
+    group = "aoc25"
+    description = "Run Day 6"
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("aoc25.day06.Day06")
+}
+
 tasks.test {
     useJUnitPlatform()
     testLogging {
