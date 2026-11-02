@@ -5,7 +5,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CephalopodMathWorksheetTest {
+public class CephalopodWorksheetTest {
 
     static final List<String> ROWS_1 = List.of(
             "123 328  51 64 ",
@@ -35,7 +35,7 @@ public class CephalopodMathWorksheetTest {
                 33_210L, 490L, 4_243_455L, 401L
         );
 
-        CephalopodMathWorksheet worksheet = CephalopodMathWorksheet.fromRows(ROWS_1);
+        CephalopodWorksheet worksheet = CephalopodWorksheet.fromRows(ROWS_1);
 
         assertEquals(expectedColumns, worksheet.columns);
         assertEquals(expectedSolutions, worksheet.solutions());
@@ -54,7 +54,7 @@ public class CephalopodMathWorksheetTest {
                 1_254_232_845L, 880L, 10_291L, 150_930L
         );
 
-        CephalopodMathWorksheet worksheet = CephalopodMathWorksheet.fromRows(ROWS_2);
+        CephalopodWorksheet worksheet = CephalopodWorksheet.fromRows(ROWS_2);
 
         assertEquals(expectedColumns, worksheet.columns);
         assertEquals(expectedSolutions, worksheet.solutions());
@@ -73,7 +73,7 @@ public class CephalopodMathWorksheetTest {
                 1058L, 3_253_600L, 625L, 8544L
         );
 
-        CephalopodMathWorksheet worksheet = CephalopodMathWorksheet.fromRowsVerticalDigits(ROWS_1);
+        CephalopodWorksheet worksheet = CephalopodWorksheet.fromRowsVerticalDigits(ROWS_1);
 
         assertEquals(expectedColumns, worksheet.columns);
         assertEquals(expectedSolutions, worksheet.solutions());
@@ -92,7 +92,7 @@ public class CephalopodMathWorksheetTest {
                 319_010L, 7546L, 5479L, 2_133_084_375L
         );
 
-        CephalopodMathWorksheet worksheet = CephalopodMathWorksheet.fromRowsVerticalDigits(ROWS_2);
+        CephalopodWorksheet worksheet = CephalopodWorksheet.fromRowsVerticalDigits(ROWS_2);
 
         assertEquals(expectedColumns, worksheet.columns);
         assertEquals(expectedSolutions, worksheet.solutions());

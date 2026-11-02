@@ -1,6 +1,6 @@
 package aoc25.day06;
 
-import aoc25.day06.domain.CephalopodMathWorksheet;
+import aoc25.day06.domain.CephalopodWorksheet;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,8 +15,8 @@ public class Day06 {
         try {
             List<String> input = Files.readAllLines(Path.of(INPUT_PATH));
 
-            CephalopodMathWorksheet worksheet1 = CephalopodMathWorksheet.fromRows(input);
-            CephalopodMathWorksheet worksheet2 = CephalopodMathWorksheet.fromRowsVerticalDigits(input);
+            CephalopodWorksheet worksheet1 = CephalopodWorksheet.fromRows(input);
+            CephalopodWorksheet worksheet2 = CephalopodWorksheet.fromRowsVerticalDigits(input);
 
             List<Long> solutions1 = worksheet1.solutions();
             List<Long> solutions2 = worksheet2.solutions();

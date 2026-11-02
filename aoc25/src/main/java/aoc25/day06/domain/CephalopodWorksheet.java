@@ -3,17 +3,17 @@ package aoc25.day06.domain;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CephalopodMathWorksheet {
+public class CephalopodWorksheet {
 
     final List<List<Long>> columns;
     final char[] operations;
 
-    private CephalopodMathWorksheet(List<List<Long>> columns, char[] operations) {
+    private CephalopodWorksheet(List<List<Long>> columns, char[] operations) {
         this.columns = columns;
         this.operations = operations;
     }
 
-    public static CephalopodMathWorksheet fromRows(List<String> rows) {
+    public static CephalopodWorksheet fromRows(List<String> rows) {
         int length = rows.size() - 1;
         int width = rows.getFirst().trim().split("\\s+").length;
 
@@ -38,10 +38,10 @@ public class CephalopodMathWorksheet {
 
         }
 
-        return new CephalopodMathWorksheet(columns, getOperations(rows, width));
+        return new CephalopodWorksheet(columns, getOperations(rows, width));
     }
 
-    public static CephalopodMathWorksheet fromRowsVerticalDigits(List<String> rows) {
+    public static CephalopodWorksheet fromRowsVerticalDigits(List<String> rows) {
         int length = rows.size() - 2;
         int width = rows.getFirst().length() - 1;
 
@@ -77,7 +77,7 @@ public class CephalopodMathWorksheet {
 
         }
 
-        return new CephalopodMathWorksheet(columns, reversed);
+        return new CephalopodWorksheet(columns, reversed);
     }
 
     public List<Long> solutions() {
