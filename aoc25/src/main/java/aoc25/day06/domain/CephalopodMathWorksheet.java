@@ -1,15 +1,12 @@
 package aoc25.day06.domain;
 
-import aoc25.day04.domain.CellGrid;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class CephalopodMathWorksheet {
 
-    private final long[][] columns;
-    private final char[] operations;
+    final long[][] columns;
+    final char[] operations;
 
     private CephalopodMathWorksheet(long[][] columns, char[] operations) {
         this.columns = columns;
@@ -37,28 +34,46 @@ public class CephalopodMathWorksheet {
 
         }
 
-        char[] operations = rows.get(length).trim()
-                .replaceAll("\\s+", "")
-                .toCharArray();
-
-        for (char op : operations) {
-            if (op != '+' && op != '*') {
-                throw new IllegalArgumentException("invalid operator encountered: " + op);
-            }
-        }
-
-        if (operations.length != width) {
-            throw new IllegalArgumentException(
-                    String.format("line %d is not of grid width %d", operations.length, width)
-            );
-        }
-
-        return new CephalopodMathWorksheet(numbersGrid, operations);
+        return new CephalopodMathWorksheet(numbersGrid, getOperations(rows, width));
     }
 
-    // TODO: implement part 2
-    public static CephalopodMathWorksheet fromRowsVertifcalDigits(List<String> rows) {
-        return new CephalopodMathWorksheet(new long[0][0], new char[0]);
+    public static CephalopodMathWorksheet fromRowsVerticalDigits(List<String> rows) {
+        int length = rows.size() - 2;
+        int width = rows.getFirst().length() - 1;
+
+        char[] operations = getOperations(rows, rows.getFirst().trim().split("\\s+").length);
+        char[] reversed = new StringBuilder(new String(operations))
+                .reverse()
+                .toString()
+                .toCharArray();
+
+        long[][] numbersGrid = new long[operations.length][3];
+
+        int addPrimaryIdx = 0;
+        int addSecondaryIdx = 0;
+        for (int colIdx = width; colIdx >= 0; colIdx--) {
+
+            List<Character> characters = new ArrayList<>();
+            for (int rowIdx = 0; rowIdx <= length; rowIdx++) {
+                characters.add(rows.get(rowIdx).charAt(colIdx));
+            }
+
+            String digits = characters.stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.joining())
+                    .trim();
+
+            if (!digits.isEmpty()) {
+                numbersGrid[addPrimaryIdx][addSecondaryIdx] = Integer.parseInt(digits);
+                addSecondaryIdx++;
+            } else {
+                addPrimaryIdx++;
+                addSecondaryIdx = 0;
+            }
+
+        }
+
+        return new CephalopodMathWorksheet(numbersGrid, reversed);
     }
 
     public List<Long> solutions() {
@@ -83,6 +98,25 @@ public class CephalopodMathWorksheet {
         }
 
         return solutions;
+    }
+
+    static char[] getOperations(List<String> rows, int width) {
+        char[] operations = rows.getLast()
+                .replaceAll("\\s+", "")
+                .toCharArray();
+
+        for (char op : operations) {
+            if (op != '+' && op != '*') {
+                throw new IllegalArgumentException("invalid operator encountered: " + op);
+            }
+        }
+
+        if (operations.length != width) {
+            throw new IllegalArgumentException(
+                    String.format("line %d is not of grid width %d", operations.length, width)
+            );
+        }
+        return operations;
     }
 
 }
