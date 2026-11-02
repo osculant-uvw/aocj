@@ -5,10 +5,10 @@ import java.util.stream.Collectors;
 
 public class CephalopodMathWorksheet {
 
-    final long[][] columns;
+    final List<List<Long>> columns;
     final char[] operations;
 
-    private CephalopodMathWorksheet(long[][] columns, char[] operations) {
+    private CephalopodMathWorksheet(List<List<Long>> columns, char[] operations) {
         this.columns = columns;
         this.operations = operations;
     }
@@ -17,7 +17,11 @@ public class CephalopodMathWorksheet {
         int length = rows.size() - 1;
         int width = rows.getFirst().trim().split("\\s+").length;
 
-        long[][] numbersGrid = new long[width][length];
+        List<List<Long>> columns = new ArrayList<>();
+        for (int cap = 0; cap < width; cap++) {
+            columns.add(new ArrayList<>());
+        }
+
         for (int i = 0; i < length; i++) {
 
             long[] numbers = Arrays.stream(rows.get(i).trim().split("\\s+"))
@@ -29,12 +33,12 @@ public class CephalopodMathWorksheet {
             }
 
             for (int j = 0; j < width; j++) {
-                numbersGrid[j][i] = numbers[j];
+                columns.get(j).add(numbers[j]);
             }
 
         }
 
-        return new CephalopodMathWorksheet(numbersGrid, getOperations(rows, width));
+        return new CephalopodMathWorksheet(columns, getOperations(rows, width));
     }
 
     public static CephalopodMathWorksheet fromRowsVerticalDigits(List<String> rows) {
@@ -47,10 +51,12 @@ public class CephalopodMathWorksheet {
                 .toString()
                 .toCharArray();
 
-        long[][] numbersGrid = new long[operations.length][3];
+        List<List<Long>> columns = new ArrayList<>();
+        for (int cap = 0; cap < reversed.length; cap++) {
+            columns.add(new ArrayList<>());
+        }
 
         int addPrimaryIdx = 0;
-        int addSecondaryIdx = 0;
         for (int colIdx = width; colIdx >= 0; colIdx--) {
 
             List<Character> characters = new ArrayList<>();
@@ -64,24 +70,22 @@ public class CephalopodMathWorksheet {
                     .trim();
 
             if (!digits.isEmpty()) {
-                numbersGrid[addPrimaryIdx][addSecondaryIdx] = Integer.parseInt(digits);
-                addSecondaryIdx++;
+                columns.get(addPrimaryIdx).add(Long.parseLong(digits));
             } else {
                 addPrimaryIdx++;
-                addSecondaryIdx = 0;
             }
 
         }
 
-        return new CephalopodMathWorksheet(numbersGrid, reversed);
+        return new CephalopodMathWorksheet(columns, reversed);
     }
 
     public List<Long> solutions() {
         List<Long> solutions = new ArrayList<>();
 
-        for (int i = 0; i < columns.length; i++) {
+        for (int i = 0; i < columns.size(); i++) {
 
-            long[] items = columns[i];
+            List<Long> items = columns.get(i);
             char op = operations[i];
 
             long calculation = (op == '+') ? 0  : 1;

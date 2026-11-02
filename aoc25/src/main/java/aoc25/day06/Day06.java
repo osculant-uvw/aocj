@@ -14,12 +14,15 @@ public class Day06 {
     public static void main(String[] args) {
         try {
             List<String> input = Files.readAllLines(Path.of(INPUT_PATH));
-            CephalopodMathWorksheet worksheet = CephalopodMathWorksheet.fromRows(input);
 
-            List<Long> solutions = worksheet.solutions();
-            long solutionSum = solutions.stream().mapToLong(Long::longValue).sum();
+            CephalopodMathWorksheet worksheet1 = CephalopodMathWorksheet.fromRows(input);
+            CephalopodMathWorksheet worksheet2 = CephalopodMathWorksheet.fromRowsVerticalDigits(input);
 
-            System.out.printf("the sum of the solutions is %d", solutionSum);
+            List<Long> solutions1 = worksheet1.solutions();
+            List<Long> solutions2 = worksheet2.solutions();
+
+            System.out.printf("the sum of the solutions for task 1 are %d %n", solutions1.stream().mapToLong(Long::longValue).sum());
+            System.out.printf("the sum of the solutions for task 2 are %d %n", solutions2.stream().mapToLong(Long::longValue).sum());
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
