@@ -29,20 +29,24 @@ public class BeamSplitterTest {
     );
 
     static final List<String> ROWS_2 = List.of(
-            "...S...........",
+            "........S......",
             "...............",
-            "...^...........",
+            ".......^.......",
             "...............",
-            "..^.^..........",
+            "......^.^......",
+            "...............",
+            ".....^.^.^.....",
             "..............."
     );
 
     static final List<String> INVALID_ROWS_1 = List.of(
             "...............",
             "...............",
-            "...^...........",
+            ".......^.......",
             "...............",
-            "..^.^..........",
+            "......^.^......",
+            "...............",
+            ".....^.^.^.....",
             "..............."
     );
 
@@ -67,8 +71,9 @@ public class BeamSplitterTest {
     @Test
     void fromExampleRows2() {
         Map<Integer, NavigableSet<Integer>> expectedSplitters = Map.of(
-                2, new TreeSet<>(Set.of(0)),
-                4, new TreeSet<>(Set.of(-1, 1))
+                2, new TreeSet<>(Set.of(-1)),
+                4, new TreeSet<>(Set.of(-2, 0)),
+                6, new TreeSet<>(Set.of(-3, -1, 1))
         );
 
         BeamSplitter beamSplitter = BeamSplitter.fromRows(ROWS_2);
@@ -85,6 +90,47 @@ public class BeamSplitterTest {
         );
 
         assertEquals("first line does not contain a start 'S' to the beam-path", exception.getMessage());
+    }
+
+    @Test
+    void walkExampleRows1() {
+        int expectedTotalBeamsSplits = 21;
+
+        BeamSplitter beamSplitter = BeamSplitter.fromRows(ROWS_1);
+
+        int totalBeamSplits = 0;
+        for (int i = 0; i < beamSplitter.getLastRowIdx(); i++) {
+            totalBeamSplits += beamSplitter.walk();
+        }
+
+        assertEquals(expectedTotalBeamsSplits, totalBeamSplits);
+    }
+
+    @Test
+    void walkExampleRows2() {
+        Map<Integer, NavigableSet<Integer>> expectedPaths = Map.of(
+                0, new TreeSet<>(Set.of(0)),
+                1, new TreeSet<>(Set.of(0)),
+                2, new TreeSet<>(Set.of(0)),
+                3, new TreeSet<>(Set.of(0)),
+                4, new TreeSet<>(Set.of(-1, 1)),
+                5, new TreeSet<>(Set.of(-1, 1)),
+                6, new TreeSet<>(Set.of(-2, 0, 2)),
+                7, new TreeSet<>(Set.of(-2, 0, 2))
+        );
+        List<Integer> expectedBeamsSplitOnWalk = List.of(
+                0, 0, 0, 1, 0, 2, 0
+        );
+
+        BeamSplitter beamSplitter = BeamSplitter.fromRows(ROWS_2);
+
+        List<Integer> beamsSplitOnWalk = new ArrayList<>();
+        for (int i = 0; i < beamSplitter.getLastRowIdx(); i++) {
+            beamsSplitOnWalk.add(beamSplitter.walk());
+        }
+
+        assertEquals(expectedPaths, beamSplitter.pathsByRow);
+        assertEquals(expectedBeamsSplitOnWalk, beamsSplitOnWalk);
     }
 
 }

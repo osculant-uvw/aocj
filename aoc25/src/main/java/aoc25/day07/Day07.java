@@ -17,6 +17,13 @@ public class Day07 {
 
             BeamSplitter beamSplitter = BeamSplitter.fromRows(input);
 
+            int totalBeamSplits = 0;
+            for (int i = 0; i < beamSplitter.getLastRowIdx(); i++) {
+                totalBeamSplits += beamSplitter.walk();
+            }
+
+            System.out.printf("the number of times the beam-path gets split is %d %n", totalBeamSplits);
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
             System.exit(1);

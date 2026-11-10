@@ -5,12 +5,16 @@ import java.util.*;
 public class BeamSplitter {
 
     final Map<Integer, NavigableSet<Integer>> splittersByRow;
+    final int lastRowIdx;
+
     final Map<Integer, NavigableSet<Integer>> pathsByRow = new HashMap<>();
-    int currentRow = 0;
+    int currentRowIdx = 0;
 
     private BeamSplitter(Map<Integer, NavigableSet<Integer>> splittersByRow) {
         this.splittersByRow = splittersByRow;
-        this.pathsByRow.put(this.currentRow, new TreeSet<>(Set.of(0)));
+        this.lastRowIdx = Collections.max(splittersByRow.keySet()) + 1;
+
+        this.pathsByRow.put(this.currentRowIdx, new TreeSet<>(Set.of(0)));
     }
 
     /**
@@ -53,14 +57,41 @@ public class BeamSplitter {
         return new ArrayList<>(List.of());
     }
 
-    // TODO: implement method which simulates the beam-path
     /**
-     * Walk the beam(s) forward by two steps,
+     * Walk the beam(s) forward,
      * each beam impeded by a beam-splitter forms two new beams to the right and left of the splitter.
      * @return the number of beams split.
      */
     public int walk() {
-        return 0;
+        int numberOfBeamsSplit = 0;
+
+        if (currentRowIdx + 1 > lastRowIdx) {
+            return numberOfBeamsSplit;
+        }
+
+        NavigableSet<Integer> nextPaths = new TreeSet<>();
+        NavigableSet<Integer> nextSplitters  = splittersByRow.getOrDefault(
+                currentRowIdx + 1, Collections.emptyNavigableSet()
+        );
+
+        NavigableSet<Integer> currentPaths = pathsByRow.get(currentRowIdx);
+        for (int beam : currentPaths) {
+            if (nextSplitters.contains(beam)) {
+                nextPaths.add(beam - 1);
+                nextPaths.add(beam + 1);
+                numberOfBeamsSplit++;
+            } else {
+                nextPaths.add(beam);
+            }
+        }
+
+        currentRowIdx++;
+        pathsByRow.put(currentRowIdx, nextPaths);
+
+        return numberOfBeamsSplit;
     }
 
+    public int getLastRowIdx() {
+        return lastRowIdx;
+    }
 }
