@@ -1,20 +1,27 @@
 package aoc25.day07.domain;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NavigableSet;
+import java.util.List;
+import java.util.TreeSet;
 
 public class BeamSplitter {
 
     final Map<Integer, NavigableSet<Integer>> splittersByRow;
     final int lastRowIdx;
 
-    final Map<Integer, NavigableSet<Integer>> pathsByRow = new HashMap<>();
+    // each row, column records a position the beam-path has visited
+    // each position has a count of the number of trajectories which have reached the position
+    final Map<Integer, Map<Integer, Long>> pathCountsByRow = new HashMap<>();
     int currentRowIdx = 0;
 
     private BeamSplitter(Map<Integer, NavigableSet<Integer>> splittersByRow) {
         this.splittersByRow = splittersByRow;
         this.lastRowIdx = Collections.max(splittersByRow.keySet()) + 1;
 
-        this.pathsByRow.put(this.currentRowIdx, new TreeSet<>(Set.of(0)));
+        this.pathCountsByRow.put(this.currentRowIdx, new HashMap<>(Map.of(0, 1L)));
     }
 
     /**
@@ -52,14 +59,10 @@ public class BeamSplitter {
         return new BeamSplitter(splitters);
     }
 
-    // TODO: implement to make tests pictorial
-    public List<String> toRows() {
-        return new ArrayList<>(List.of());
-    }
-
     /**
      * Walk the beam(s) forward,
      * each beam impeded by a beam-splitter forms two new beams to the right and left of the splitter.
+     * Keeps count of the incoming trajectories (timelines), by propagating the count to each destination.
      * @return the number of beams split.
      */
     public int walk() {
@@ -69,29 +72,35 @@ public class BeamSplitter {
             return numberOfBeamsSplit;
         }
 
-        NavigableSet<Integer> nextPaths = new TreeSet<>();
+        Map<Integer, Long> nextPaths = new HashMap<>();
         NavigableSet<Integer> nextSplitters  = splittersByRow.getOrDefault(
                 currentRowIdx + 1, Collections.emptyNavigableSet()
         );
 
-        NavigableSet<Integer> currentPaths = pathsByRow.get(currentRowIdx);
-        for (int beam : currentPaths) {
-            if (nextSplitters.contains(beam)) {
-                nextPaths.add(beam - 1);
-                nextPaths.add(beam + 1);
+        Map<Integer, Long> currentPaths = pathCountsByRow.get(currentRowIdx);
+        for (int position : currentPaths.keySet()) {
+            long count = currentPaths.get(position);
+
+            if (nextSplitters.contains(position)) {
+                nextPaths.merge(position - 1, count, Long::sum);
+                nextPaths.merge(position + 1, count, Long::sum);
                 numberOfBeamsSplit++;
             } else {
-                nextPaths.add(beam);
+                nextPaths.merge(position, count, Long::sum);
             }
         }
 
         currentRowIdx++;
-        pathsByRow.put(currentRowIdx, nextPaths);
+        pathCountsByRow.put(currentRowIdx, nextPaths);
 
         return numberOfBeamsSplit;
     }
 
-    public int getLastRowIdx() {
-        return lastRowIdx;
+    public int getLastRowIdx() { return lastRowIdx; }
+
+    public long getNumberOfTimelines() {
+        Map<Integer, Long> current = pathCountsByRow.get(currentRowIdx);
+        return current.values().stream().mapToLong(Long::longValue).sum();
     }
+
 }
