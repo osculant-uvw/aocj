@@ -23,6 +23,7 @@ public class Day07 {
             }
 
             System.out.printf("the number of times the beam-path gets split is %d %n", totalBeamSplits);
+            System.out.printf("the number of timelines for the beam-path is %d %n", beamSplitter.getNumberOfTimelines());
 
         } catch (Exception e) {
             System.out.println(e.getMessage());

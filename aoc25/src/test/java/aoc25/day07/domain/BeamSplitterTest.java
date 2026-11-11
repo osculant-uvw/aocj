@@ -104,19 +104,22 @@ public class BeamSplitterTest {
         }
 
         assertEquals(expectedTotalBeamsSplits, totalBeamSplits);
+        assertEquals(40, beamSplitter.getNumberOfTimelines());
     }
 
     @Test
     void walkExampleRows2() {
-        Map<Integer, NavigableSet<Integer>> expectedPaths = Map.of(
-                0, new TreeSet<>(Set.of(0)),
-                1, new TreeSet<>(Set.of(0)),
-                2, new TreeSet<>(Set.of(0)),
-                3, new TreeSet<>(Set.of(0)),
-                4, new TreeSet<>(Set.of(-1, 1)),
-                5, new TreeSet<>(Set.of(-1, 1)),
-                6, new TreeSet<>(Set.of(-2, 0, 2)),
-                7, new TreeSet<>(Set.of(-2, 0, 2))
+        Map<Integer, Map<Integer, Long>> expectedPaths = Map.of(
+                0, new HashMap<>(Map.of(0, 1L)),
+                1, new HashMap<>(Map.of(0, 1L)),
+                2, new HashMap<>(Map.of(0, 1L)),
+                3, new HashMap<>(Map.of(0, 1L)),
+                4, new HashMap<>(Map.of(-1, 1L, 1, 1L)),
+                5, new HashMap<>(Map.of(-1, 1L, 1, 1L)),
+                // two beam-paths combine into the same single path
+                // the count of trajectories that reached this position must add together
+                6, new HashMap<>(Map.of(-2, 1L, 0, 2L, 2, 1L)),
+                7, new HashMap<>(Map.of(-2, 1L, 0, 2L, 2, 1L))
         );
         List<Integer> expectedBeamsSplitOnWalk = List.of(
                 0, 0, 0, 1, 0, 2, 0
@@ -129,8 +132,9 @@ public class BeamSplitterTest {
             beamsSplitOnWalk.add(beamSplitter.walk());
         }
 
-        assertEquals(expectedPaths, beamSplitter.pathsByRow);
+        assertEquals(expectedPaths, beamSplitter.pathCountsByRow);
         assertEquals(expectedBeamsSplitOnWalk, beamsSplitOnWalk);
+        assertEquals(4, beamSplitter.getNumberOfTimelines());
     }
 
 }
